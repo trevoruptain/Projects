@@ -1,5 +1,6 @@
-require_relative 'piece'
-require_relative 'display'
+require_relative './piece'
+require_relative './display'
+require_relative './cursor'
 
 class Board
   attr_accessor :grid
@@ -10,6 +11,8 @@ class Board
     @grid.each_with_index do |row, i|
       if i < 2 || i > 5
         row.each {|el| el << Piece.new()}
+      else
+        row.each {|el| el << DummyPiece.new()}
       end
     end
   end
@@ -29,13 +32,13 @@ class Board
     x, y = end_pos
     if !is_board_pos(start_pos)
       raise "Your starting position is not on the board."
-    elsif @grid[a][b].nil?
+    elsif @grid[a][b].is_a? DummyPiece
       raise "There is no piece in that spot!"
     elsif !is_board_pos(end_pos)
       raise "You can't move your piece off the board, dummy."
     end
     @grid[x][y] << @grid[a][b]
-    @grid[a][b] = nil
+    @grid[a][b] = DummyPiece.new()
   end
 
   def is_board_pos(pos)
@@ -43,5 +46,15 @@ class Board
       return true
     end
     false
+  end
+
+  def display_board
+    system('clear')
+    board = Display.new(self)
+    10.times do
+      board.render
+      board.cursor.get_input
+      system('clear')
+    end
   end
 end

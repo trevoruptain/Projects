@@ -1,4 +1,5 @@
 require "io/console"
+require_relative './board'
 
 KEYMAP = {
   " " => :space,
@@ -76,8 +77,28 @@ class Cursor
   end
 
   def handle_key(key)
+    case key
+    when :return
+      return @cursor_pos
+    when :space
+      return @cursor_pos
+    when :ctrl_c
+      Process.exit(0)
+    else
+      update_pos(key)
+      nil
+    end
   end
 
   def update_pos(diff)
+    unless MOVES.has_key? diff
+      puts "I'm not sure what you want me to do here."
+      sleep(1)
+      return nil
+    end
+    x, y = MOVES[diff]
+    return nil unless @board.is_board_pos([@cursor_pos[0] + x, @cursor_pos[1] + y])
+    @cursor_pos[0] += x
+    @cursor_pos[1] += y
   end
 end
