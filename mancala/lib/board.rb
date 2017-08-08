@@ -58,15 +58,17 @@ class Board
   end
 
   def one_side_empty?
-    for i in 0..5
-      return false if @cups[i].count > 0
-    end
-    for i in 7..12
-      return false if @cups[i].count > 0
-    end
-    true
+    @cups[0..5].all? {|ele| ele.empty?} ||
+    @cups[7..12].all? {|ele| ele.empty?}
   end
 
   def winner
+    player1_stones = @cups[6].count
+    player2_stones = @cups[13].count
+    if player1_stones == player2_stones
+      return :draw
+    else
+      player1_stones > player2_stones ? @player1 : @player2
+    end
   end
 end
