@@ -13,11 +13,11 @@ class Board
       if i == 0
         place_row(:black, i)
       elsif i == 1
-        row.each_with_index {|el, j| el << Pawn.new(:black, [i, j])}
+        row.each_with_index {|el, j| el << Pawn.new(:black, [i, j], self)}
       elsif i >= 2 && i <= 5
         row.each {|el| el << NilPiece.instance}
       elsif i == 6
-        row.each_with_index {|el, j| el << Pawn.new(:white, [i, j])}
+        row.each_with_index {|el, j| el << Pawn.new(:white, [i, j], self)}
       elsif i == 7
         place_row(:white, i)
       end
@@ -37,21 +37,21 @@ class Board
     @grid[i].each_with_index do |el, j|
       case j
       when 0
-        el << Rook.new(color, [i, j])
+        el << Rook.new(color, [i, j], self)
       when 1
-        el << Knight.new(color, [i, j])
+        el << Knight.new(color, [i, j], self)
       when 2
-        el << Bishop.new(color, [i, j])
+        el << Bishop.new(color, [i, j], self)
       when 3
-        el << Queen.new(color, [i, j])
+        el << Queen.new(color, [i, j], self)
       when 4
-        el << King.new(color, [i, j])
+        el << King.new(color, [i, j], self)
       when 5
-        el << Bishop.new(color, [i, j])
+        el << Bishop.new(color, [i, j], self)
       when 6
-        el << Knight.new(color, [i, j])
+        el << Knight.new(color, [i, j], self)
       when 7
-        el << Rook.new(color, [i, j])
+        el << Rook.new(color, [i, j], self)
       end
     end
   end
@@ -60,14 +60,25 @@ class Board
     a, b = start_pos
     x, y = end_pos
     if !is_board_pos(start_pos)
-      raise "Your starting position is not on the board."
-    elsif @grid[a][b].is_a? DummyPiece
-      raise "There is no piece in that spot!"
+      puts "Your starting position is not on the board."
+      sleep(2)
+      return
+    elsif @grid[a][b].first.is_a? NilPiece
+      puts "There is no piece in that starting position."
+      sleep(2)
+      return
     elsif !is_board_pos(end_pos)
-      raise "You can't move your piece off the board, dummy."
+      puts "You can't move your piece off the board, dummy."
+      sleep(2)
+      return
+    elsif start_pos == end_pos
+      puts "Nice try, but that's not really a move, is it?"
+      sleep(2)
+      return
     end
     @grid[x][y] = @grid[a][b]
-    @grid[a][b] = NilPiece.new()
+    @grid[x][y].first.update_pos([x, y])
+    @grid[a][b] = [NilPiece.instance]
   end
 
   def is_board_pos(pos)
@@ -77,12 +88,19 @@ class Board
     false
   end
 
-  def display_board
+  def play
     system('clear')
     board = Display.new(self)
-    10.times do
+    commands = []
+    20.times do
       board.render
-      board.cursor.get_input
+      command = board.cursor.get_input
+      commands << command.dup unless command.nil?
+      if commands.length == 2
+        move_piece(commands[0], commands[1])
+        commands = []
+      end
+
       system('clear')
     end
   end
@@ -90,5 +108,5 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   board = Board.new
-  board.display_board
+  board.play
 end
