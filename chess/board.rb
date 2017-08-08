@@ -11,53 +11,15 @@ class Board
     end
     @grid.each_with_index do |row, i|
       if i == 0
-        row.each_with_index do |el, j|
-          case j
-          when 0
-            el << Rook.new(:black, [i, j])
-          when 1
-            el << Knight.new(:black, [i, j])
-          when 2
-            el << Bishop.new(:black, [i, j])
-          when 3
-            el << Queen.new(:black, [i, j])
-          when 4
-            el << King.new(:black, [i, j])
-          when 5
-            el << Bishop.new(:black, [i, j])
-          when 6
-            el << Knight.new(:black, [i, j])
-          when 7
-            el << Rook.new(:black, [i, j])
-          end
-        end
+        place_row(:black, i)
       elsif i == 1
         row.each_with_index {|el, j| el << Pawn.new(:black, [i, j])}
-      elsif i >= 2 || i <= 5
-        row.each {|el| el << NilPiece.new()}
+      elsif i >= 2 && i <= 5
+        row.each {|el| el << NilPiece.instance}
       elsif i == 6
         row.each_with_index {|el, j| el << Pawn.new(:white, [i, j])}
       elsif i == 7
-        row.each_with_index do |el, j|
-          case j
-          when 0
-            el << Rook.new(:white, [i, j])
-          when 1
-            el << Knight.new(:white, [i, j])
-          when 2
-            el << Bishop.new(:white, [i, j])
-          when 3
-            el << Queen.new(:white, [i, j])
-          when 4
-            el << King.new(:white, [i, j])
-          when 5
-            el << Bishop.new(:white, [i, j])
-          when 6
-            el << Knight.new(:white, [i, j])
-          when 7
-            el << Rook.new(:white, [i, j])
-          end
-        end
+        place_row(:white, i)
       end
     end
   end
@@ -71,6 +33,28 @@ class Board
   #   x, y = pos
   #   @grid[x][y] = value
   # end
+  def place_row(color, i)
+    @grid[i].each_with_index do |el, j|
+      case j
+      when 0
+        el << Rook.new(color, [i, j])
+      when 1
+        el << Knight.new(color, [i, j])
+      when 2
+        el << Bishop.new(color, [i, j])
+      when 3
+        el << Queen.new(color, [i, j])
+      when 4
+        el << King.new(color, [i, j])
+      when 5
+        el << Bishop.new(color, [i, j])
+      when 6
+        el << Knight.new(color, [i, j])
+      when 7
+        el << Rook.new(color, [i, j])
+      end
+    end
+  end
 
   def move_piece(start_pos, end_pos)
     a, b = start_pos
@@ -106,6 +90,5 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   board = Board.new
-  p board
   board.display_board
 end

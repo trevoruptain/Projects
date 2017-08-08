@@ -14,7 +14,8 @@ class Piece
 end
 
 class NilPiece < Piece
-  # include Singleton
+  include Singleton
+  attr_reader :value, :color
   def initialize
     @value = ' '
     @color = nil
