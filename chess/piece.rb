@@ -16,10 +16,11 @@ end
 
 class NilPiece < Piece
   include Singleton
-  attr_reader :value, :color
+  attr_reader :value, :color, :moves
   def initialize
     @value = ' '
     @color = nil
+    @moves = []
   end
 end
 
@@ -70,7 +71,18 @@ module SlidingPiece
     end
 
     if directions.include?(:diagonal)
-      
+      DIAGONALS.each do |direction|
+        x, y = direction
+        curr_idx1, curr_idx2 = column + x, row + y
+        next if curr_idx1 < 0 || curr_idx2 < 0 || curr_idx1 > 7 || curr_idx2 > 7
+        until !@board.grid[curr_idx1][curr_idx2].first.is_a?(NilPiece)
+          break unless @board.is_board_pos([curr_idx1 + x, curr_idx2 + y])
+          possible_moves << [curr_idx1, curr_idx2]
+          curr_idx1 += x
+          curr_idx2 += y
+        end
+        possible_moves << [curr_idx1, curr_idx2]
+      end
     end
     possible_moves.reject! do |pos|
       x, y = pos
@@ -81,11 +93,74 @@ module SlidingPiece
 end
 
 module SteppingPiece
+  def moves
+    knight_arr = [
+      [-1, 2],
+      [1, 2],
+      [2, 1],
+      [2, -1],
+      [1, -2],
+      [-1, -2],
+      [-2, -1],
+      [-2, 1],
+    ]
+    king_arr = [
+      [0, 1],
+      [1, 1],
+      [1, 0],
+      [1, -1],
+      [0, -1],
+      [-1, -1],
+      [-1, 0],
+      [-1, 1],
+    ]
+    column, row = @position
+    possible_moves = []
+
+    if self.class == Pawn
+      if @color == :white
+        possible_moves << [column - 1, row] if @board.grid[column - 1][row].first.is_a?(NilPiece)
+        possible_moves << [column - 2, row] unless @has_moved
+        if @board.grid[column - 1][row - 1].first.color == :black
+          possible_moves << [column - 1, row - 1]
+        elsif @board.grid[column - 1][row + 1].first.color == :black
+          possible_moves << [column - 1, row + 1]
+        end
+      else
+        possible_moves << [column + 1, row] if @board.grid[column + 1][row].first.is_a?(NilPiece)
+        possible_moves << [column + 2, row] unless @has_moved
+        if @board.grid[column + 1][row - 1].first.color == :white
+          possible_moves << [column + 1, row - 1]
+        elsif @board.grid[column + 1][row + 1].first.color == :white
+          possible_moves << [column + 1, row + 1]
+        end
+      end
+    elsif self.class == Knight
+      knight_arr.each do |pos|
+        x, y = pos
+        next if column + x < 0 || row + y < 0 || column + x > 7 || row + y > 7
+        possible_moves << [column + x, row + y]
+      end
+    elsif self.class == King
+      king_arr.each do |pos|
+        x, y = pos
+        next if column + x < 0 || row + y < 0 || column + x > 7 || row + y > 7
+        possible_moves << [column + x, row + y]
+      end
+    end
+
+    possible_moves.reject! do |pos|
+      x, y = pos
+      @board.grid[x][y].first.color == self.color
+    end
+
+    possible_moves
+  end
 end
 
 class Pawn < Piece
   include SteppingPiece
-  attr_reader :value, :color
+  attr_reader :value, :color, :has_moved
   def initialize(color, position, board)
     if color == :black
       @value = '♟'
@@ -95,6 +170,12 @@ class Pawn < Piece
     @position = position
     @board = board
     @color = color
+    @has_moved = false
+  end
+
+  def update_pos(pos)
+    @position = pos
+    @has_moved = true
   end
 end
 

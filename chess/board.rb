@@ -75,10 +75,18 @@ class Board
       puts "Nice try, but that's not really a move, is it?"
       sleep(2)
       return
+    elsif !@grid[a][b].first.moves.include?([x, y])
+      puts "Sorry buddy, you can't move there."
+      sleep(1)
+      return
+    elsif x < 0 || y < 0
+      puts "Invalid ending position"
+      sleep(1)
+      return
     end
     @grid[x][y] = @grid[a][b]
-    @grid[x][y].first.update_pos([x, y])
     @grid[a][b] = [NilPiece.instance]
+    @grid[x][y].first.update_pos([x, y])
   end
 
   def is_board_pos(pos)
@@ -92,7 +100,7 @@ class Board
     system('clear')
     board = Display.new(self)
     commands = []
-    20.times do
+    loop do
       board.render
       command = board.cursor.get_input
       commands << command.dup unless command.nil?
