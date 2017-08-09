@@ -112,6 +112,30 @@ class Board
       system('clear')
     end
   end
+
+  def in_check?(color)
+    if color == :black
+      opponent_color = :white
+    else
+      opponent_color = :black
+    end
+
+    opponent_possible_moves = []
+    king_pos = []
+
+    @grid.each_with_index do |row, i|
+      row.each_with_index do |piece, j|
+        if piece.first.class == King && piece.first.color == color
+          king_pos << i << j
+        end
+        if piece.first.color == opponent_color
+          puts piece.first.moves
+        end
+      end
+    end
+
+    opponent_possible_moves << 1
+  end
 end
 
 if __FILE__ == $PROGRAM_NAME

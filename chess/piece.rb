@@ -19,7 +19,7 @@ class NilPiece < Piece
   attr_reader :value, :color, :moves
   def initialize
     @value = ' '
-    @color = nil
+    @color = :clear
     @moves = []
   end
 end
