@@ -1,0 +1,16 @@
+/* PUT FLUID GRID CODE HERE */
+.left {
+  width:25%;
+  padding-right:5%;
+  margin: 0;
+  float: left;
+}
+
+.right {
+  width: 70%;
+}
+
+
+body {
+  width: 80vw;
+}
