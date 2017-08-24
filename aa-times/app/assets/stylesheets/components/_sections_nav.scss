@@ -1,0 +1,24 @@
+.section-nav {
+  padding:15px 60px 15px 60px;
+  border-bottom: solid 1px $light-gray;
+}
+
+.section-nav ul {
+  display:flex;
+  justify-content: space-between;
+}
+
+.section-nav a {
+  padding:2px;
+}
+
+.section-nav a:hover {
+  background-color: $light-gray;
+}
+
+.all {
+  text-decoration: underline;
+  text-transform: uppercase;
+  font-size: 9px;
+  vertical-align: baseline;
+}
