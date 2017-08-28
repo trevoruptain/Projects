@@ -94,3 +94,19 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+
+module AuthFeaturesHelper
+  def sign_up(username)
+    visit new_user_url
+    fill_in "Username", with: username
+    fill_in "Password", with: "password"
+    click_button "Sign Up"
+  end
+
+  def login(user)
+    visit new_session_url
+    fill_in "Username", with: user.username
+    fill_in "Password", with: "abc123"
+    click_button "Log In"
+  end
+end
