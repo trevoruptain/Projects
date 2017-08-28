@@ -12,21 +12,22 @@ RSpec.describe User, type: :model do
   end
 
   it 'encrypts the password and adds it to the password digest' do
-    expect(User.first.password_digest).to_not eq(nil)
+    expect(user.password_digest).to_not eq(nil)
   end
 
   it 'can look up a user by username and password' do
-    expect(User.find_by_credentials('Taconova', 'abc123').name).to eq('Taconova')
+    user.save
+    expect(User.find_by_credentials('Taconova', 'abc123').username).to eq('Taconova')
   end
 
   it 'ensures that a user has a session token' do
-    expect(User.first.session_token).to_not eq(nil)
+    expect(user.session_token).to_not eq(nil)
   end
 
   it 'can reset a users session token' do
-    session_token = User.first.session_token
-    User.first.reset_session_token!
+    session_token = user.session_token
+    user.reset_token!
 
-    expect(User.first.session_token).to_not eq(session_token)
+    expect(user.session_token).to_not eq(session_token)
   end
 end

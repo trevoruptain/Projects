@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   after_initialize :ensure_session_token
 
+  validates :username, :password_digest, :session_token, presence: true
+
   attr_reader :password
 
   def self.find_by_credentials(username, password)
