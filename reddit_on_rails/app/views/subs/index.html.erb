@@ -1,0 +1,10 @@
+<h1>Hi you made it to the subs index page</h1>
+
+<h3><%= link_to "New Sub", new_sub_url %></h3>
+
+<h4>Subs</h4>
+  <ul>
+  <% @subs.each do |sub| %>
+    <li><%= link_to sub.title, sub_url(sub) %></li>
+  <% end %>
+</ul>

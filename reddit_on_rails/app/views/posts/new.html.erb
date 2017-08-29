@@ -1,0 +1,25 @@
+<h1>Write a New Post</h1>
+<form action="<%= posts_url %>" method="post">
+  <%= auth_token %>
+  <label>Title
+    <input type="text" name="post[title]" value="">
+  </label>
+  <label>URL
+    <input type="text" name="post[url]" value="">
+  </label>
+  <label>Content
+    <input type="text" name="post[content]" value="">
+  </label>
+  <!-- <input type="integer" name="post[sub_id]" value="">
+  <input type="integer" name="post[author_id]" value=""> -->
+  <br>
+  <label>Sub
+    <br>
+    <% @subs.try(:each) do |subreddit| %>
+        <input type="checkbox" name="post[sub_id][]" value="<%= subreddit.id %>">
+        <label><%= subreddit.title %></label>
+      <br>
+    <% end %>
+  </label>
+  <input type="submit" value="Submit">
+</form>
