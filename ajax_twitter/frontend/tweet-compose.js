@@ -19,7 +19,7 @@ class TweetCompose {
   }
 
   clearInput() {
-    $(":input").attr("value", "");
+    $(':input[type="text"]').attr("value", "");
   }
 
   handleSuccess(data) {
@@ -29,9 +29,10 @@ class TweetCompose {
     const $ul = $(selector);
     const $li = $("<li>");
     $li.append(`${data.content} -- `);
-    $li.append(data.username);
+    $li.append(data.user.username);
     $li.append(` ${data.created_at} `);
-    // $li.append(data.mentions.user.username);
+    console.log(data);
+    $li.append(data.mentions[0].user.username);
     $ul.prepend($li);
   }
 }
