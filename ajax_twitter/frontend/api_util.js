@@ -24,6 +24,18 @@ const APIUtil = {
         success(data);
       }
     });
+  },
+
+  createTweet: (tweetData, success) => {
+    return $.ajax({
+      url: "/tweets",
+      method: 'POST',
+      dataType: "json",
+      data: tweetData,
+      success(data) {
+        success(data);
+      }
+    });
   }
 };
 
