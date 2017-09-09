@@ -2,8 +2,8 @@ import React from 'react';
 
 class Clock extends React.Component {
 
-  constructor(props) {
-    super(props);
+  constructor(args) {
+    super(args);
     this.state = { time: new Date() };
     this.tick = this.tick.bind(this);
   }
